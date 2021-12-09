@@ -1,0 +1,75 @@
+<html>
+<head>
+	<title>twitter search</title>
+	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+	<link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+	<script src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+</head>
+<body>
+
+<div class="container">
+	<div class= "row" style="margin-top:300px;">
+		<div class="modal-body">
+			<form class="form-horizontal">
+				<div class="form-group">
+					<div class="col-sm-10">
+						<input type="text" name="search" class="form-control" placeholder="search">
+						<span class="help-block"></span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-2" style="float:right">
+			<button type="button"  class="btn btn-default" data-dismiss="modal">搜索</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-hover" id="search_table">
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6" id="page_info_area"></div>
+		<div class="col-md-6" id="page_nav_area"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function () {
+		to_page(1);
+	});
+
+	function to_page(pn) {
+		$.ajax({
+			url:"/search?search="+ $(".form-control").val(),
+			type:"GET",
+			success:function (result) {
+				build_search_table(result);
+			}
+		});
+	}
+
+	function build_search_table(result) {
+		$.each(result, function (index, item) {
+			var text = $("<td></td>").append(item.text);
+			var author_id = $("<td></td>").append(item.author_id);
+			var id = $("<td></td>").append(item.id);
+			var lang = $("<td></td>").append(item.lang);
+			var conversation_id = $("<td></td>").append(item.conversation_id);
+			var created_at = $("<td></td>").append(item.created_at);
+
+
+			$("<tr></tr>")
+					.append(text)
+					.append(author_id)
+					.append(id)
+					.append(lang)
+					.append(conversation_id)
+					.append(created_at)
+					.appendTo("#search_table tbody");
+		})
+	}
+
+</script>
+</body>
